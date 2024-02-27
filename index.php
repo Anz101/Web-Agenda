@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agenda Organisasi XXX</title>
     <link rel="stylesheet" href="style.css">
+    <script src="script.php"></script>
 </head>
 <body>
     <div id="app">
@@ -25,7 +26,7 @@
 
         <div id="calendar" class="calendar"></div>
 
-        <script src="script.php"></script>
+        
     </div>
 </body>
 </html>
