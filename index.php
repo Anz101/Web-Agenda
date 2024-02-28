@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <h1>Agenda Organisasi XXX</h1>
+    
     <div id="app">
         <form method="post">
             <label for="monthSelect">Select Month:</label>
