@@ -1,14 +1,11 @@
 <?php
-// Informasi koneksi ke database
-$host = "localhost"; // Sesuaikan dengan host database Anda
-$username = "root"; // Sesuaikan dengan username database Anda
-$password = ""; // Sesuaikan dengan password database Anda
-$database = "dataagenda"; // Sesuaikan dengan nama database Anda
+$host = "localhost"; 
+$username = "root"; 
+$password = ""; 
+$database = "dataagenda"; 
 
-// Membuat koneksi
 $koneksi = new mysqli($host, $username, $password, $database);
 
-// Memeriksa koneksi
 if ($koneksi->connect_error) {
     die("Koneksi database gagal: " . $koneksi->connect_error);
 }
@@ -36,10 +33,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-// Menutup koneksi setelah selesai
+
 $koneksi->close();
 ?>
-
 
 
 
