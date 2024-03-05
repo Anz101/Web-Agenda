@@ -25,6 +25,8 @@
                 echo "<h2>" . $row["judul"] . "</h2>";
                 echo "<p>Tanggal: " . $row["tanggal"] . "</p>";
                 echo "<p>Isi Agenda: " . $row["isi"] . "</p>";
+
+                echo "<a href='index.php'>Back</a>";
             } else {
                 echo "Agenda tidak ditemukan.";
             }
