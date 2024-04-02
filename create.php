@@ -44,7 +44,7 @@
             <input type="submit" value="Simpan">
         </form>
         
-        <a href="index.php">Kembali ke Daftar Agenda</a>
+        <a href="indexadmin.php">Kembali ke Daftar Agenda</a>
     </div>
 </body>
 </html>
