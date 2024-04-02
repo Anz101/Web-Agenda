@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -49,7 +49,7 @@
         
         if (deleteAgenda($id_agenda)) {
             echo "<br>Agenda berhasil dihapus.";
-            echo "<script>window.location.href = 'indexadmin.php';</script>";
+            header("Location: indexadmin.php");
             exit;
         } else {
             echo "<br>Error: Gagal menghapus agenda.";
