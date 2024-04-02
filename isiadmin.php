@@ -18,8 +18,8 @@
     if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET["id"])) {
         $id_agenda = $_GET["id"];
     } else {
-            echo "ID Agenda tidak valid.";
-             exit; 
+             header("Location: indexadmin.php");
+             exit;
     }
 
     $sql = "SELECT * FROM agenda WHERE id = $id_agenda";
@@ -48,7 +48,6 @@
     
         
         if (deleteAgenda($id_agenda)) {
-            echo "<br>Agenda berhasil dihapus.";
             header("Location: indexadmin.php");
             exit;
         } else {
