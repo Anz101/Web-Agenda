@@ -3,8 +3,8 @@ session_start();
 
 include 'script.php';
 
-if(isset($_SESSION['admin'])) {
-    header("Location: indexadmin.php");
+if(!isset($_SESSION['admin'])) {
+    header("Location: loginadmin.php");
     exit;
 }
 
@@ -12,11 +12,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    // Memanggil fungsi simpanPasswordBaru() untuk menyimpan akun admin baru
-    if(simpanadminBaru($username, $password)) {
-        $success_message = "Akun admin berhasil dibuat. Silakan login.";
+    
+    if(simpanuserBaru($username, $password)) {
+        $success_message = "Akun user berhasil dibuat.";
     } else {
-        $error_message = "Gagal membuat akun admin.";
+        $error_message = "Gagal membuat akun user.";
     }
 }
 ?>
@@ -25,11 +25,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buat Akun Admin Baru</title>
+    <title>Buat Akun User Baru</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Buat Akun Admin Baru</h1>
+    <h1>Buat Akun User Baru</h1>
     <div id="app">
         <?php if(isset($error_message)) echo "<p>$error_message</p>"; ?>
         <?php if(isset($success_message)) echo "<p>$success_message</p>"; ?>

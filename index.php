@@ -1,3 +1,11 @@
+<?php
+session_start();
+
+if(!isset($_SESSION['user'])) {
+    header("Location: login.php");
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,6 +18,8 @@
     <h1>Agenda Organisasi XXX</h1>
     
     <div id="app">
+        <div style="position: absolute; top: 10px; right: 10px;"><?php echo $_SESSION['user']; ?></div>
+
         <form method="post">
             <label for="monthSelect">Select Month:</label>
             <select name="monthSelect" id="monthSelect">

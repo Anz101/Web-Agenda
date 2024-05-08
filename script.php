@@ -48,11 +48,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["delete"])) {
     }
 }
 
-function simpanakunBaru($username, $password) {
+function simpanadminBaru($username, $password) {
     global $koneksi;
 
     $password_hash = password_hash($password, PASSWORD_DEFAULT);
     $sql = "INSERT INTO admins (username, password) VALUES ('$username', '$password_hash')";
+    if ($koneksi->query($sql) === TRUE) {
+        return true; 
+    } else {
+        return false; 
+    }
+}
+
+function simpanuserBaru($username, $password) {
+    global $koneksi;
+
+    $password_hash = password_hash($password, PASSWORD_DEFAULT);
+    $sql = "INSERT INTO users (username, password) VALUES ('$username', '$password_hash')";
     if ($koneksi->query($sql) === TRUE) {
         return true; 
     } else {

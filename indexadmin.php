@@ -19,11 +19,12 @@ if(!isset($_SESSION['admin'])) {
     
     <div id="app">
         
-        <div style="position: absolute; top: 10px; right: 10px;">Admin</div>
+        <div style="position: absolute; top: 10px; right: 10px;"><?php echo $_SESSION['admin']; ?></div>
         
         
         <a href="create.php" style="float: right; margin-right: 10px;">Create</a>
-
+        <a href="createuser.php" style="float: right; margin-right: 10px;">Create User</a>
+        
         <form method="post">
             <label for="monthSelect">Select Month:</label>
             <select name="monthSelect" id="monthSelect">

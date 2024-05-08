@@ -3,8 +3,8 @@ session_start();
 
 include 'script.php';
 
-if(isset($_SESSION['admin'])) {
-    header("Location: indexadmin.php");
+if(isset($_SESSION['user'])) {
+    header("Location: index.php");
     exit;
 }
 
@@ -12,11 +12,22 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    // Memanggil fungsi simpanPasswordBaru() untuk menyimpan akun admin baru
-    if(simpanadminBaru($username, $password)) {
-        $success_message = "Akun admin berhasil dibuat. Silakan login.";
+    // Mengecek ke database
+    $sql = "SELECT * FROM users WHERE username='$username'";
+    $result = $koneksi->query($sql);
+
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        // Memverifikasi password
+        if(password_verify($password, $row['password'])) {
+            $_SESSION['user'] = $username;
+            header("Location: index.php");
+            exit;
+        } else {
+            $error = "Username atau password salah.";
+        }
     } else {
-        $error_message = "Gagal membuat akun admin.";
+        $error = "Username atau password salah.";
     }
 }
 ?>
@@ -25,20 +36,19 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buat Akun Admin Baru</title>
+    <title>Login User</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Buat Akun Admin Baru</h1>
+    <h1>Login User</h1>
     <div id="app">
-        <?php if(isset($error_message)) echo "<p>$error_message</p>"; ?>
-        <?php if(isset($success_message)) echo "<p>$success_message</p>"; ?>
+        <?php if(isset($error)) echo "<p>$error</p>"; ?>
         <form method="post">
             <label for="username">Username:</label>
             <input type="text" name="username" id="username" required><br><br>
             <label for="password">Password:</label>
             <input type="password" name="password" id="password" required><br><br>
-            <input type="submit" value="Buat Akun">
+            <input type="submit" value="Login">
         </form>
     </div>
 </body>
