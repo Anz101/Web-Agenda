@@ -47,7 +47,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["delete"])) {
         echo "<br>Error: Gagal menghapus agenda.";
     }
 }
+
+function simpanakunBaru($username, $password) {
+    global $koneksi;
+
+    $password_hash = password_hash($password, PASSWORD_DEFAULT);
+    $sql = "INSERT INTO admins (username, password) VALUES ('$username', '$password_hash')";
+    if ($koneksi->query($sql) === TRUE) {
+        return true; 
+    } else {
+        return false; 
+    }
+}
+
 ?>
+
+
 
 
 
