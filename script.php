@@ -59,18 +59,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["delete"])) {
     }
 }
 
-function simpanadminBaru($username, $password) {
-    global $koneksi;
-
-    $password_hash = password_hash($password, PASSWORD_DEFAULT);
-    $sql = "INSERT INTO admins (username, password) VALUES ('$username', '$password_hash')";
-    if ($koneksi->query($sql) === TRUE) {
-        return true; 
-    } else {
-        return false; 
-    }
-}
-
 function simpanuserBaru($username, $password) {
     global $koneksi;
 
@@ -121,7 +109,6 @@ function getKeteranganByAgendaId($id_agenda) {
 function tambahKeteranganAgenda($id_agenda, $keterangan, $username) {
     global $koneksi;
 
-    // Memasukkan keterangan ke dalam tabel agenda_keterangan
     $sql = "INSERT INTO agenda_keterangan (agenda_id, keterangan, user_id) VALUES (?, ?, (SELECT id FROM admins WHERE username = ?))";
     $stmt = $koneksi->prepare($sql);
     $stmt->bind_param("iss", $id_agenda, $keterangan, $username);
@@ -140,6 +127,7 @@ function logout() {
     header("Location: loginadmin.php?message=logout_success");
     exit;
 }
+
 
 ?>
 
