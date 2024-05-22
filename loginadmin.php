@@ -19,7 +19,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
         // Memverifikasi password
-        if(password_verify($password, $row['password'])) {
+        if(hash('sha256', $password) === $row['password']) {
             $_SESSION['admin'] = $username;
             header("Location: indexadmin.php");
             exit;
@@ -50,7 +50,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
             <input type="password" name="password" id="password" required><br><br>
             <input type="submit" value="Login">
         </form>
-        <p><a href="createaccount.php">Buat akun</a></p>
     </div>
 </body>
 </html>
