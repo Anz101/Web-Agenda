@@ -63,13 +63,20 @@ function simpanuserBaru($username, $password) {
     global $koneksi;
 
     $password_hash = password_hash($password, PASSWORD_DEFAULT);
-    $sql = "INSERT INTO users (username, password) VALUES ('$username', '$password_hash')";
-    if ($koneksi->query($sql) === TRUE) {
-        return true; 
+
+    $stmt = $koneksi->prepare("INSERT INTO users (username, password) VALUES (?, ?)");
+    if ($stmt === false) {
+        return false;
+    }
+    $stmt->bind_param("ss", $username, $password_hash);
+    $result = $stmt->execute();
+    if ($result === true) {
+        return true;
     } else {
-        return false; 
+        return false;
     }
 }
+
 
 
 // Fungsi untuk mengambil data agenda berdasarkan ID

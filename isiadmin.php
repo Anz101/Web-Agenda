@@ -3,9 +3,7 @@ session_start();
 
 if(isset($_SESSION['admin'])) {
     if(time() - $_SESSION['admin_login_time'] > 1800) { 
-        session_unset();
-        session_destroy();
-        header("Location: loginadmin.php?error=session_expired");
+        logout(); 
         exit;
     } else {
         $_SESSION['admin_login_time'] = time();
