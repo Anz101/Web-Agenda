@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 include 'script.php';
 
 if(isset($_SESSION['admin'])) {
