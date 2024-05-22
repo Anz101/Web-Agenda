@@ -1,9 +1,25 @@
 <?php
 session_start();
 
-if(!isset($_SESSION['admin'])) {
+if (!isset($_SESSION['admin'])) {
     header("Location: loginadmin.php");
     exit;
+}
+
+include 'script.php';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $judul = $_POST["judul"];
+    $isi = $_POST["isi"];
+    $tanggal = $_POST["tanggal"];
+    $keterangan = $_POST["keterangan"]; 
+            
+    $sql = "INSERT INTO agenda (judul, isi, tanggal, keterangan) VALUES ('$judul', '$isi', '$tanggal', '$keterangan')";
+    if ($koneksi->query($sql) === TRUE) {
+        echo "Agenda berhasil ditambahkan.";
+    } else {
+        echo "Error: " . $sql . "<br>" . $koneksi->error;
+    }
 }
 ?>
 
@@ -12,31 +28,13 @@ if(!isset($_SESSION['admin'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detail Agenda</title>
+    <title>Create Agenda</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Detail Agenda</h1>
+    <h1>Create Agenda</h1>
     
     <div id="app">
-        <?php
-        include 'script.php';
-
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $judul = $_POST["judul"];
-            $isi = $_POST["isi"];
-            $tanggal = $_POST["tanggal"];
-            $keterangan = $_POST["keterangan"]; 
-            
-            $sql = "INSERT INTO agenda (judul, isi, tanggal, keterangan) VALUES ('$judul', '$isi', '$tanggal', '$keterangan')";
-            if ($koneksi->query($sql) === TRUE) {
-                echo "Agenda berhasil ditambahkan.";
-            } else {
-                echo "Error: " . $sql . "<br>" . $koneksi->error;
-            }
-        }
-        ?>
-        
         <form method="post">
             <label for="judul">Judul Agenda:</label><br>
             <input type="text" id="judul" name="judul" required><br><br>

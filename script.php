@@ -28,14 +28,25 @@ function ambilDataJadwal($selectedMonth) {
 function deleteAgenda($id_agenda) {
     global $koneksi;
 
-    $sql_delete = "DELETE FROM agenda WHERE id=$id_agenda";
-    
-    if ($koneksi->query($sql_delete) === TRUE) {
-        return true; 
-    } else {
-        return false; 
+    // Hapus keterangan terkait agenda
+    $sql_delete_keterangan = "DELETE FROM agenda_keterangan WHERE agenda_id=$id_agenda";
+    $result_delete_keterangan = $koneksi->query($sql_delete_keterangan);
+
+    if (!$result_delete_keterangan) {
+        die("Error deleting agenda keterangan: " . $koneksi->error);
     }
+
+    // Hapus agenda
+    $sql_delete_agenda = "DELETE FROM agenda WHERE id=$id_agenda";
+    $result_delete_agenda = $koneksi->query($sql_delete_agenda);
+
+    if (!$result_delete_agenda) {
+        die("Error deleting agenda: " . $koneksi->error);
+    }
+
+    return true;
 }
+
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["delete"])) {
@@ -72,7 +83,52 @@ function simpanuserBaru($username, $password) {
     }
 }
 
+
+// Fungsi untuk mengambil data agenda berdasarkan ID
+function getAgendaById($id_agenda) {
+    global $koneksi;
+
+    $sql = "SELECT * FROM agenda WHERE id = $id_agenda";
+    $result = $koneksi->query($sql);
+
+    if ($result->num_rows > 0) {
+        return $result->fetch_assoc();
+    } else {
+        return null;
+    }
+}
+
+// Fungsi untuk mengambil data keterangan agenda berdasarkan ID agenda
+function getKeteranganByAgendaId($id_agenda) {
+    global $koneksi;
+
+    $keterangan_data = array();
+
+    $sql = "SELECT * FROM agenda_keterangan WHERE agenda_id = $id_agenda ORDER BY created_at DESC";
+    $result = $koneksi->query($sql);
+
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $keterangan_data[] = $row;
+        }
+    }
+
+    return $keterangan_data;
+}
+
+// Fungsi untuk menambahkan keterangan baru ke agenda
+function tambahKeteranganAgenda($id_agenda, $keterangan) {
+    global $koneksi;
+
+    $sql = "INSERT INTO agenda_keterangan (agenda_id, keterangan) VALUES ($id_agenda, '$keterangan')";
+    $result = $koneksi->query($sql);
+
+    return $result;
+}
 ?>
+
+
+
 
 
 
