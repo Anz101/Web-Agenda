@@ -21,9 +21,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $tanggal = $_POST["tanggal"];
     $keterangan = $_POST["keterangan"]; 
     $username = $_SESSION['admin']; // Menyimpan username admin yang sedang login
-
-    $sql = "INSERT INTO agenda (judul, isi, tanggal, keterangan) VALUES ('$judul', '$isi', '$tanggal', '$keterangan')";
-    if ($koneksi->query($sql) === TRUE) {
+    
+    // Menggunakan parameter terikat untuk mencegah SQL injection
+    $sql = "INSERT INTO agenda (judul, isi, tanggal, keterangan) VALUES (?, ?, ?, ?)";
+    $stmt = $koneksi->prepare($sql);
+    $stmt->bind_param("ssss", $judul, $isi, $tanggal, $keterangan);
+    
+    if ($stmt->execute()) {
         $agenda_id = $koneksi->insert_id; // Mengambil ID agenda yang baru saja ditambahkan
         // Memanggil fungsi untuk menambahkan keterangan agenda
         tambahKeteranganAgenda($agenda_id, $keterangan, $username);
@@ -31,6 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         echo "Error: " . $sql . "<br>" . $koneksi->error;
     }
+    $stmt->close(); // Tutup statement
 }
 ?>
 
