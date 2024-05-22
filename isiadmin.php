@@ -67,7 +67,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["delete"])) {
             if ($result_keterangan->num_rows > 0) {
                 echo "<h3>Keterangan:</h3>";
                 while ($row_keterangan = $result_keterangan->fetch_assoc()) {
-                    echo "<p>" . $row_keterangan["created_at"] . ": " . $row_keterangan["keterangan"] . "</p>";
+                    // Ambil waktu keterangan
+                    $created_at = $row_keterangan["created_at"];
+                    // Ambil username pengguna yang menambahkan keterangan
+                    $user_id = $row_keterangan["user_id"];
+                    $sql_username = "SELECT username FROM admins WHERE id = $user_id";
+                    $result_username = $koneksi->query($sql_username);
+                    if ($result_username->num_rows > 0) {
+                        $row_username = $result_username->fetch_assoc();
+                        $username = $row_username["username"];
+                    } else {
+                        $username = "Unknown";
+                    }
+
+                    echo "<p>$created_at oleh $username: " . $row_keterangan["keterangan"] . "</p>";
                 }
             } else {
                 echo "<p>Tidak ada keterangan.</p>";
