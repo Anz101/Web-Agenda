@@ -1,24 +1,19 @@
 <?php
 session_start();
 
-include 'script.php'; // Pastikan 'script.php' termasuk koneksi ke database
+include 'script.php'; 
 
-// Mengecek jika pengguna sudah login, jika ya, redirect ke halaman indexadmin.php
 if(isset($_SESSION['admin'])) {
     header("Location: indexadmin.php");
     exit;
 }
 
-// Inisialisasi variabel error
 $error = '';
 
-// Menangani pesan kesalahan sesi kedaluwarsa
 if (isset($_GET['error']) && $_GET['error'] == 'session_expired') {
     $error = "Sesi Anda telah kedaluwarsa. Silakan login kembali.";
 }
 
-
-// Mengecek apakah metode request adalah POST
 if($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST['username'];
     $password = $_POST['password'];
@@ -33,7 +28,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($_SESSION['login_attempts'] >= 5 && time() - $_SESSION['last_login_attempt'] < 300) {
         $error = "Anda telah mencoba login terlalu sering. Silakan coba lagi nanti.";
     } else {
-        // Melakukan pencegahan SQL Injection dengan menggunakan parameter terikat
+        // Pencegahan SQL Injection 
         $sql = "SELECT * FROM admins WHERE username=?";
         $stmt = $koneksi->prepare($sql);
         $stmt->bind_param("s", $username);

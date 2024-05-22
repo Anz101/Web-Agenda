@@ -1,10 +1,23 @@
 <?php
 session_start();
 
-if(!isset($_SESSION['user'])) {
+include 'script.php';
+
+if(isset($_SESSION['user'])) {
+    if(time() - $_SESSION['user_login_time'] > 1800) { 
+        out(); // Menggunakan fungsi out untuk logout
+    } else {
+        $_SESSION['user_login_time'] = time();
+    }
+} else {
     header("Location: login.php");
     exit;
 }
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['logout'])) {
+    out(); // Menggunakan fungsi out untuk logout
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -18,8 +31,12 @@ if(!isset($_SESSION['user'])) {
     <h1>Agenda Organisasi XXX</h1>
     
     <div id="app">
-        <div style="position: absolute; top: 10px; right: 10px;"><?php echo $_SESSION['user']; ?></div>
-
+    <div style="position: absolute; top: 10px; right: 10px;">
+        <?php echo $_SESSION['user']; ?>
+        <form method="post" style="display:inline;">
+            <button type="submit" name="logout">Logout</button>
+        </form>
+    </div>
         <form method="post">
             <label for="monthSelect">Select Month:</label>
             <select name="monthSelect" id="monthSelect">
@@ -40,7 +57,7 @@ if(!isset($_SESSION['user'])) {
         </form>
 
         <?php 
-        include 'script.php';
+        
 
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $selectedMonth = $_POST["monthSelect"];

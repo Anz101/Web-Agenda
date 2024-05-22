@@ -131,9 +131,18 @@ function logout() {
     session_start();
     session_unset();
     session_destroy();
-    header("Location: loginadmin.php?message=logout_success");
+    header("Location: loginadmin.php");
     exit;
 }
+
+function out() {
+    session_start();
+    session_unset();
+    session_destroy();
+    header("Location: login.php");
+    exit;
+}
+
 
 
 ?>
