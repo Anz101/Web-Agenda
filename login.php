@@ -35,6 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Memverifikasi password
             if (password_verify($password, $row['password'])) {
                 $_SESSION['user'] = $username;
+                $_SESSION['user_id'] = $row['id'];
                 $_SESSION['user_login_time'] = time();
                 // Reset percobaan login setelah berhasil login
                 $_SESSION['login_attempts'] = 0;

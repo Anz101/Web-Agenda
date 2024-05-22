@@ -143,6 +143,28 @@ function out() {
     exit;
 }
 
+// Fungsi untuk mendapatkan username berdasarkan user_id
+function getUsernameById($user_id) {
+    global $koneksi;
+
+    $sql = "SELECT username FROM users WHERE id = ?";
+    $stmt = $koneksi->prepare($sql);
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    // Periksa apakah query mengembalikan hasil
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $username = $row['username'];
+    } else {
+        // Jika tidak ada hasil, kembalikan NULL atau dapatkan username default
+        $username = null; // Atau username default
+    }
+    
+    $stmt->close();
+    return $username;
+}
 
 
 ?>

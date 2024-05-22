@@ -29,7 +29,9 @@ if ($id_agenda !== null) {
         if (!empty($keterangan_data)) {
             echo "<h3>Keterangan:</h3>";
             foreach ($keterangan_data as $keterangan) {
-                echo "<p>" . $keterangan["created_at"] . ": " . $keterangan["keterangan"] . "</p>";
+                // Ambil username pengguna yang menambahkan keterangan
+                $username = getUsernameById($keterangan["user_id"]);
+                echo "<p>" . $keterangan["created_at"] . " oleh $username: " . $keterangan["keterangan"] . "</p>";
             }
         } else {
             echo "<p>Tidak ada keterangan.</p>";
@@ -54,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["id"])) {
     $id_agenda = $_POST["id"];
     $keterangan = $_POST["keterangan"];
 
-    $success = tambahKeteranganAgenda($id_agenda, $keterangan);
+    $success = tambahKeteranganAgenda($id_agenda, $keterangan, $_SESSION['user']);
 
     if ($success) {
         echo "<br>Keterangan berhasil ditambahkan.";
