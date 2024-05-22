@@ -1,3 +1,12 @@
+<?php
+session_start();
+
+if(!isset($_SESSION['admin'])) {
+    header("Location: loginadmin.php");
+    exit;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -44,7 +53,7 @@
             <input type="submit" value="Simpan">
         </form>
         
-        <a href="indexadmin.php">Kembali ke Daftar Agenda</a>
+        <a href="indexadmin.php">Back</a>
     </div>
 </body>
 </html>
