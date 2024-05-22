@@ -1,11 +1,23 @@
-/* Contoh CSS */
+
 body {
     font-family: Arial, sans-serif;
-    background-color: #e0e0e0;
+    text-align: center;
 }
 
-h1 {
-    color: #333;
+select {
+    margin-bottom: 20px;
 }
 
-/* Tambahkan aturan gaya lainnya sesuai kebutuhan */
+.calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+}
+
+.date {
+    border: 1px solid #ccc;
+    padding: 10px;
+    height: 80px;
+}
+
+

@@ -3,40 +3,43 @@ session_start();
 
 include 'script.php';
 
-if(isset($_SESSION['user'])) {
-    if(time() - $_SESSION['user_login_time'] > 1800) { 
-        out(); 
+if(isset($_SESSION['admin'])) {
+    if(time() - $_SESSION['admin_login_time'] > 1800) { 
+        logout(); 
     } else {
-        $_SESSION['user_login_time'] = time();
+        $_SESSION['admin_login_time'] = time();
     }
 } else {
-    header("Location: login.php");
+    header("Location: loginadmin.php");
     exit;
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['logout'])) {
-    out(); 
+    logout();
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agenda Organisasi XXX</title>
+    <title>Agenda Organisasi XXX (Admin)</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Agenda Organisasi XXX</h1>
+    <h1>Agenda Organisasi XXX (Admin)</h1>
     
     <div id="app">
-    <div style="position: absolute; top: 10px; right: 10px;">
-        <?php echo $_SESSION['user']; ?>
-        <form method="post" style="display:inline;">
-            <button type="submit" name="logout">Logout</button>
-        </form>
-    </div>
+        <div style="position: absolute; top: 10px; right: 10px;">
+            <?php echo $_SESSION['admin']; ?>
+            <form method="post" style="display:inline;">
+                <button type="submit" name="logout">Logout</button>
+            </form>
+        </div>
+        
+        <a href="create.php" style="float: right; margin-right: 10px;">Create</a>
+        <a href="createuser.php" style="float: right; margin-right: 10px;">Create User</a>
+        
         <form method="post">
             <label for="monthSelect">Select Month:</label>
             <select name="monthSelect" id="monthSelect">
@@ -57,13 +60,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['logout'])) {
         </form>
 
         <?php 
-        
-
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['logout'])) {
             $selectedMonth = $_POST["monthSelect"];
-
-            $sql = "SELECT * FROM agenda WHERE MONTH(tanggal) = $selectedMonth";
-            $result = $koneksi->query($sql);
+            $result = ambilDataJadwal($selectedMonth);
 
             if ($result->num_rows > 0) {
                 echo "<table border='1'>";
@@ -74,13 +73,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['logout'])) {
                     $judul = $row["judul"];
 
                     $_SESSION['current_agenda_id'] = $id;
-                    
+
                     echo "<tr>";
-                    echo "<td><a href='isi.php'>$judul</a></td>";
+                    echo "<td><a href='isiadmin.php?id=$id'>$judul</a></td>"; 
                     echo "<td>" . $row["tanggal"] . "</td>";
                     echo "</tr>";
                 }
-                
 
                 echo "</table>";
             } else {
