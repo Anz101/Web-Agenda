@@ -116,15 +116,21 @@ function getKeteranganByAgendaId($id_agenda) {
     return $keterangan_data;
 }
 
-// Fungsi untuk menambahkan keterangan baru ke agenda
-function tambahKeteranganAgenda($id_agenda, $keterangan) {
+
+// Fungsi untuk menambahkan keterangan pada agenda
+function tambahKeteranganAgenda($id_agenda, $keterangan, $username) {
     global $koneksi;
 
-    $sql = "INSERT INTO agenda_keterangan (agenda_id, keterangan) VALUES ($id_agenda, '$keterangan')";
-    $result = $koneksi->query($sql);
-
+    // Memasukkan keterangan ke dalam tabel agenda_keterangan
+    $sql = "INSERT INTO agenda_keterangan (agenda_id, keterangan, user_id) VALUES (?, ?, (SELECT id FROM admins WHERE username = ?))";
+    $stmt = $koneksi->prepare($sql);
+    $stmt->bind_param("iss", $id_agenda, $keterangan, $username);
+    $result = $stmt->execute();
+    
+    $stmt->close();
     return $result;
 }
+
 
 // Fungsi untuk logout
 function logout() {
@@ -136,7 +142,6 @@ function logout() {
 }
 
 ?>
-
 
 
 
