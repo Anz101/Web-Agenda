@@ -1,36 +1,77 @@
 <?php
 session_start();
 
-include 'script.php';
+include 'script.php'; // Pastikan 'script.php' termasuk koneksi ke database
 
+// Mengecek jika pengguna sudah login, jika ya, redirect ke halaman indexadmin.php
 if(isset($_SESSION['admin'])) {
     header("Location: indexadmin.php");
     exit;
 }
 
+// Inisialisasi variabel error
+$error = '';
+
+// Menangani pesan kesalahan sesi kedaluwarsa
+if (isset($_GET['error']) && $_GET['error'] == 'session_expired') {
+    $error = "Sesi Anda telah kedaluwarsa. Silakan login kembali.";
+}
+
+
+// Mengecek apakah metode request adalah POST
 if($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    // Mengecek ke database
-    $sql = "SELECT * FROM admins WHERE username='$username'";
-    $result = $koneksi->query($sql);
+    // Inisialisasi percobaan login jika belum ada
+    if (!isset($_SESSION['login_attempts'])) {
+        $_SESSION['login_attempts'] = 0;
+        $_SESSION['last_login_attempt'] = time();
+    }
 
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        // Memverifikasi password
-        if(hash('sha256', $password) === $row['password']) {
-            $_SESSION['admin'] = $username;
-            header("Location: indexadmin.php");
-            exit;
+    // Memeriksa apakah ada percobaan login terlalu sering
+    if ($_SESSION['login_attempts'] >= 5 && time() - $_SESSION['last_login_attempt'] < 300) {
+        $error = "Anda telah mencoba login terlalu sering. Silakan coba lagi nanti.";
+    } else {
+        // Melakukan pencegahan SQL Injection dengan menggunakan parameter terikat
+        $sql = "SELECT * FROM admins WHERE username=?";
+        $stmt = $koneksi->prepare($sql);
+        $stmt->bind_param("s", $username);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        // Mengecek apakah hasil query menghasilkan data
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            // Memverifikasi password dengan menggunakan hash sha256
+            if(hash('sha256', $password) === $row['password']) {
+                $_SESSION['admin'] = $username;
+                $_SESSION['admin_login_time'] = time(); // Menyimpan waktu saat login
+                // Reset percobaan login setelah berhasil login
+                $_SESSION['login_attempts'] = 0;
+                header("Location: indexadmin.php");
+                exit;
+            } else {
+                $error = "Username atau password salah.";
+                $_SESSION['login_attempts']++;
+            }
         } else {
             $error = "Username atau password salah.";
+            $_SESSION['login_attempts']++;
         }
-    } else {
-        $error = "Username atau password salah.";
+
+        // Memperbarui timestamp percobaan login terakhir
+        $_SESSION['last_login_attempt'] = time();
+
+        // Reset percobaan login jika waktu tunggu telah berlalu
+        if (time() - $_SESSION['last_login_attempt'] >= 300) {
+            $_SESSION['login_attempts'] = 1;
+            $_SESSION['last_login_attempt'] = time();
+        }
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

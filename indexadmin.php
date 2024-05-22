@@ -1,9 +1,20 @@
 <?php
 session_start();
+include 'script.php';
 
-if(!isset($_SESSION['admin'])) {
+if(isset($_SESSION['admin'])) {
+    if(time() - $_SESSION['admin_login_time'] > 1800) { 
+        logout(); 
+    } else {
+        $_SESSION['admin_login_time'] = time();
+    }
+} else {
     header("Location: loginadmin.php");
     exit;
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['logout'])) {
+    logout();
 }
 ?>
 <!DOCTYPE html>
@@ -18,9 +29,12 @@ if(!isset($_SESSION['admin'])) {
     <h1>Agenda Organisasi XXX (Admin)</h1>
     
     <div id="app">
-        
-        <div style="position: absolute; top: 10px; right: 10px;"><?php echo $_SESSION['admin']; ?></div>
-        
+        <div style="position: absolute; top: 10px; right: 10px;">
+            <?php echo $_SESSION['admin']; ?>
+            <form method="post" style="display:inline;">
+                <button type="submit" name="logout">Logout</button>
+            </form>
+        </div>
         
         <a href="create.php" style="float: right; margin-right: 10px;">Create</a>
         <a href="createuser.php" style="float: right; margin-right: 10px;">Create User</a>
@@ -45,13 +59,9 @@ if(!isset($_SESSION['admin'])) {
         </form>
 
         <?php 
-        include 'script.php';
-
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['logout'])) {
             $selectedMonth = $_POST["monthSelect"];
-
-            $sql = "SELECT * FROM agenda WHERE MONTH(tanggal) = $selectedMonth";
-            $result = $koneksi->query($sql);
+            $result = ambilDataJadwal($selectedMonth);
 
             if ($result->num_rows > 0) {
                 echo "<table border='1'>";
@@ -61,13 +71,11 @@ if(!isset($_SESSION['admin'])) {
                     $id = $row["id"];
                     $judul = $row["judul"];
 
-                    
                     echo "<tr>";
                     echo "<td><a href='isiadmin.php?id=$id'>$judul</a></td>"; 
                     echo "<td>" . $row["tanggal"] . "</td>";
                     echo "</tr>";
                 }
-                
 
                 echo "</table>";
             } else {

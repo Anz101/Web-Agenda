@@ -125,6 +125,16 @@ function tambahKeteranganAgenda($id_agenda, $keterangan) {
 
     return $result;
 }
+
+// Fungsi untuk logout
+function logout() {
+    session_start();
+    session_unset();
+    session_destroy();
+    header("Location: loginadmin.php?message=logout_success");
+    exit;
+}
+
 ?>
 
 
