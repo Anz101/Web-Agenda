@@ -13,9 +13,22 @@ if(isset($_SESSION['admin'])) {
     exit;
 }
 
+$id_agenda = null;
+
+if(isset($_SESSION['current_agenda_id'])) {
+    $id_agenda = $_SESSION['current_agenda_id'];
+    unset($_SESSION['current_agenda_id']);
+} else {
+    // Jika session current_agenda_id tidak ada, Anda dapat mengatur id_agenda dari GET atau POST request
+    if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET["id"])) {
+        $id_agenda = $_GET["id"];
+    } else if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["id"])) {
+        $id_agenda = $_POST["id"];
+    }
+}
+
 include 'script.php';
 
-$id_agenda = null;
 
 if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET["id"])) {
     $id_agenda = $_GET["id"];

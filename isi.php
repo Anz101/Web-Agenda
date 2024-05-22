@@ -1,14 +1,33 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['user'])) {
+if(isset($_SESSION['user'])) {
+    if(time() - $_SESSION['user_login_time'] > 1800) { 
+        out(); 
+    } else {
+        $_SESSION['user_login_time'] = time();
+    }
+} else {
     header("Location: login.php");
     exit;
 }
 
-include 'script.php';
-
 $id_agenda = null;
+
+if(isset($_SESSION['current_agenda_id'])) {
+    $id_agenda = $_SESSION['current_agenda_id'];
+    unset($_SESSION['current_agenda_id']);
+} else {
+    // Jika session current_agenda_id tidak ada, Anda dapat mengatur id_agenda dari GET atau POST request
+    if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET["id"])) {
+        $id_agenda = $_GET["id"];
+    } else if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["id"])) {
+        $id_agenda = $_POST["id"];
+    }
+}
+
+
+include 'script.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET["id"])) {
     $id_agenda = $_GET["id"];
@@ -77,4 +96,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["id"])) {
     <div id="app"></div>
 </body>
 </html>
-

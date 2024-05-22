@@ -5,7 +5,7 @@ include 'script.php';
 
 if(isset($_SESSION['user'])) {
     if(time() - $_SESSION['user_login_time'] > 1800) { 
-        out(); // Menggunakan fungsi out untuk logout
+        out(); 
     } else {
         $_SESSION['user_login_time'] = time();
     }
@@ -15,7 +15,7 @@ if(isset($_SESSION['user'])) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['logout'])) {
-    out(); // Menggunakan fungsi out untuk logout
+    out(); 
 }
 
 ?>
@@ -73,9 +73,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['logout'])) {
                     $id = $row["id"];
                     $judul = $row["judul"];
 
+                    $_SESSION['current_agenda_id'] = $id;
                     
                     echo "<tr>";
-                    echo "<td><a href='isi.php?id=$id'>$judul</a></td>";
+                    echo "<td><a href='isi.php'>$judul</a></td>";
                     echo "<td>" . $row["tanggal"] . "</td>";
                     echo "</tr>";
                 }
